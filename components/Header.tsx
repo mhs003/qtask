@@ -22,12 +22,17 @@ export default function Header() {
     return (
         <div className="lg:col-span-2 border-b border-border/50 flex flex-row justify-center items-center">
             <div className="container flex flex-row justify-between items-center">
-                <Sheet open={sheetOpen}>
+                <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                     <SheetTrigger asChild>
                         <Button
                             variant="outline"
                             size="icon"
                             className="lg:hidden"
+                            onClick={() =>
+                                setSheetOpen((p) => {
+                                    return !p;
+                                })
+                            }
                         >
                             <Menu />
                         </Button>
@@ -48,11 +53,11 @@ export default function Header() {
                                             ? "bg-accent text-accent-foreground"
                                             : ""
                                     )}
-                                    onClick={() => {
-                                        setSheetOpen(() => {
-                                            return !sheetOpen;
-                                        });
-                                    }}
+                                    onClick={() =>
+                                        setSheetOpen((p) => {
+                                            return !p;
+                                        })
+                                    }
                                 >
                                     Home
                                 </Link>
@@ -66,11 +71,11 @@ export default function Header() {
                                             ? "bg-accent text-accent-foreground"
                                             : ""
                                     )}
-                                    onClick={() => {
-                                        setSheetOpen(() => {
-                                            return !sheetOpen;
-                                        });
-                                    }}
+                                    onClick={() =>
+                                        setSheetOpen((p) => {
+                                            return !p;
+                                        })
+                                    }
                                 >
                                     About
                                 </Link>

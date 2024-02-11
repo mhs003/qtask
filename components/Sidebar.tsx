@@ -8,7 +8,7 @@ import React from "react";
 export default function Sidebar() {
     const pathname = usePathname();
     return (
-        <div className="hidden lg:flex flex-col justify-start items-center p-4 pl-0 h-[calc(100%+50px)] border-r border-border/40 gap-2">
+        <div className="hidden lg:flex flex-col justify-start items-center p-4 pl-0 border-r border-border/60 gap-2">
             <h2 className="text-lg font-semibold text-foreground mb-3">Menu</h2>
             <Link
                 href="/"
