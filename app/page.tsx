@@ -98,7 +98,7 @@ export default function Home() {
 
     useEffect(() => {
         setTasks(() => {
-            return Storage?.getTasks()?.reverse();
+            return Storage?.getTasks()?.reverse() ?? [null];
         });
     }, [refreshTasks]);
 
@@ -307,7 +307,7 @@ export default function Home() {
                                 <b>Total tasks:</b>{" "}
                                 {
                                     tasks?.filter(
-                                        (task) => task.deleted == false
+                                        (task) => task?.deleted == false
                                     ).length
                                 }
                             </div>
@@ -316,8 +316,8 @@ export default function Home() {
                                 {
                                     tasks?.filter(
                                         (task) =>
-                                            task.status == 1 &&
-                                            task.deleted == false
+                                            task?.status == 1 &&
+                                            task?.deleted == false
                                     ).length
                                 }
                             </div>
@@ -334,7 +334,7 @@ export default function Home() {
                             Loading...
                         </div>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
-                            {tasks
+                            {tasks && tasks[0] !== null
                                 ? tasks.map((task) => {
                                       if (task.deleted || task.status == 1) {
                                           return;
@@ -448,7 +448,7 @@ export default function Home() {
                         </div>
                         {/*  */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
-                            {tasks
+                            {tasks && tasks[0] !== null
                                 ? tasks.map((task) => {
                                       if (task.deleted || task.status == 0) {
                                           return;
