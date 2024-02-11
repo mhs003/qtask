@@ -6,12 +6,19 @@ interface TaskData {
     status: number; // 0: Incomplete | 1: Completed
     priority: string;
     deleted: boolean;
-    color: string;
+    // color: string;
 }
 
 const Storage = {
     __STORAGE_NAME: "__tasks__",
 
+    /**
+     * Sets data in local storage with the provided key and value, optionally overriding existing data.
+     *
+     * @param {string} key - The key for the data in local storage
+     * @param {string | object | boolean | number | Array<any>} value - The value to be stored
+     * @param {boolean} override - Flag to indicate if existing data should be overridden (default is false)
+     */
     setData: (
         key: string,
         value: string | object | boolean | number | Array<any>,
@@ -32,6 +39,12 @@ const Storage = {
         }
     },
 
+    /**
+     * Adds a task to the local storage if running in a browser environment.
+     *
+     * @param {TaskData} data - the task data to be added
+     * @return {void}
+     */
     addTask: (data: TaskData) => {
         if (typeof window !== "undefined") {
             if (!Storage.getTasks()) {
@@ -50,6 +63,11 @@ const Storage = {
         }
     },
 
+    /**
+     * Retrieves an array of task data.
+     *
+     * @return {Array<TaskData>} an array of task data
+     */
     getTasks: (): Array<TaskData> => {
         if (typeof window !== "undefined") {
             return JSON.parse(
@@ -60,6 +78,12 @@ const Storage = {
         }
     },
 
+    /**
+     * Retrieves a task data by its key from the storage.
+     *
+     * @param {string} key - the key of the task to retrieve
+     * @return {TaskData | void} the task data corresponding to the key, or void if window is undefined
+     */
     getTask: (key: string): TaskData | void => {
         if (typeof window !== "undefined") {
             const tasks = Storage.getTasks();
@@ -68,6 +92,12 @@ const Storage = {
         }
     },
 
+    /**
+     * Updates a task in the storage with the specified key and update data.
+     *
+     * @param {string} key - The key of the task to update
+     * @param {TaskData} updateData - The updated task data
+     */
     updateTask: (key: string, updateData: TaskData) => {
         if (typeof window !== "undefined") {
             const tasks = Storage.getTasks();
@@ -88,10 +118,10 @@ const Storage = {
                                   ? data.priority
                                   : updateData.priority,
                           deleted: updateData.deleted,
-                          color:
-                              updateData.color == "__old__"
-                                  ? data.color
-                                  : updateData.color,
+                          //   color:
+                          //       updateData.color == "__old__"
+                          //           ? data.color
+                          //           : updateData.color,
                       }
                     : data
             );
@@ -102,6 +132,12 @@ const Storage = {
         }
     },
 
+    /**
+     * Deletes a task from storage.
+     *
+     * @param {string} key - the key of the task to be deleted
+     * @return {void}
+     */
     deleteTask: (key: string) => {
         if (typeof window !== "undefined") {
             const tasks = Storage.getTasks();
@@ -113,7 +149,7 @@ const Storage = {
                           status: data.status,
                           priority: data.priority,
                           deleted: true,
-                          color: data.color,
+                          //   color: data.color,
                       }
                     : data
             );
