@@ -293,7 +293,7 @@ export default function Home() {
                     defaultValue="incomplete"
                     className="w-full flex flex-col gap-3 justify-center items-center"
                 >
-                    <div className="w-full flex justify-between items-center gap-5">
+                    <div className="w-full flex flex-col-reverse lg:flex-row justify-between items-center gap-3 lg:gap-5">
                         <TabsList>
                             <TabsTrigger value="incomplete">
                                 Incomplete
