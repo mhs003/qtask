@@ -98,7 +98,7 @@ export default function Home() {
 
     useEffect(() => {
         setTasks(() => {
-            return Storage.getTasks().reverse();
+            return Storage?.getTasks()?.reverse();
         });
     }, [refreshTasks]);
 
