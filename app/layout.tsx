@@ -34,7 +34,7 @@ export default function RootLayout({
                 >
                     <main className="">
                         <Header />
-                        <div className="container grid grid-cols-1 lg:grid-cols-[300px_1fr]">
+                        <div className="container px-0 lg:px-8 grid grid-cols-1 lg:grid-cols-[300px_1fr]">
                             <Sidebar />
                             {children}
                         </div>

@@ -10,7 +10,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
     Select,
@@ -21,8 +20,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import Storage, { TaskData } from "@/lib/Storage";
+import { randomColor, uniq_key } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 export default function Home() {
     const [formDatas, setFormDatas] = useState({
@@ -31,12 +33,46 @@ export default function Home() {
     });
     const [dialogOpened, setDialogOpened] = useState(false);
 
+    const [tasks, setTasks] = useState<Array<TaskData>>([]);
+    const [refreshTasks, setRefreshTasks] = useState(0);
+
     const saveTask = (): void => {
-        localStorage.setItem("test", "test value");
+        Storage.addTask({
+            key: uniq_key(),
+            task: formDatas.task,
+            status: 0,
+            priority: formDatas.priority == "" ? "low" : formDatas.priority,
+            deleted: false,
+            color: randomColor(),
+        });
+        setDialogOpened(false);
+        setRefreshTasks((o) => o + 1);
     };
 
+    const markAsComplete = (key: string): void => {
+        const task = Storage.getTask(key);
+        if (task) {
+            Storage.updateTask(key, {
+                key: key,
+                task: "__old__",
+                status: 1,
+                priority: "__old__",
+                deleted: false,
+                color: "__old__",
+            });
+            setRefreshTasks((o) => o + 1);
+        }
+    };
+
+    useEffect(() => {
+        setTasks(() => {
+            return Storage.getTasks().reverse();
+        });
+        console.log("refreshed");
+    }, [refreshTasks]);
+
     return (
-        <div className="hidden lg:flex flex-col justify-start items-center p-4 gap-2">
+        <div className="flex flex-col justify-start items-center p-4 gap-2 max-h-[calc(100dvh-105px)] overflow-y-auto">
             <div className="w-full flex justify-between items-center">
                 <h2 className="text-2xl font-semibold text-foreground">
                     Tasks
@@ -75,6 +111,7 @@ export default function Home() {
                                                 };
                                             });
                                         }}
+                                        required
                                     />
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
@@ -98,6 +135,7 @@ export default function Home() {
                                             id="taskPriority"
                                             className="col-span-3"
                                             name="priority"
+                                            aria-required
                                         >
                                             <SelectValue placeholder="Select priority" />
                                         </SelectTrigger>
@@ -127,6 +165,67 @@ export default function Home() {
                         </form>
                     </DialogContent>
                 </Dialog>
+            </div>
+            {/*  */}
+            <div className="mt-5 w-full">
+                <Tabs
+                    defaultValue="incomplete"
+                    className="w-full flex flex-col gap-3 justify-center items-center"
+                >
+                    <TabsList>
+                        <TabsTrigger value="incomplete">Incomplete</TabsTrigger>
+                        <TabsTrigger value="completed">Completed</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="incomplete" className="w-full">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
+                            {tasks
+                                ? tasks.map((task) => {
+                                      if (task.deleted || task.status == 1) {
+                                          return;
+                                      }
+                                      return (
+                                          <div
+                                              key={task.key}
+                                              className="grid grid-cols-[1fr_auto] gap-2 p-4 rounded-md"
+                                              style={{
+                                                  backgroundColor: task.color,
+                                              }}
+                                          >
+                                              <div className="flex flex-col gap-3">
+                                                  <h3 className="text-xl font-semibold text-white break-all">
+                                                      {task.task}
+                                                  </h3>
+                                                  <div className="flex flex-col gap-1">
+                                                      <p className="text-sm text-gray-50">
+                                                          <b>Priority:</b>{" "}
+                                                          {task.priority}
+                                                      </p>
+                                                      <p className="text-sm text-gray-50">
+                                                          <b>Status:</b>{" "}
+                                                          {task.status == 0
+                                                              ? "Incomplete"
+                                                              : "Completed"}
+                                                      </p>
+                                                  </div>
+                                              </div>
+                                              <div>
+                                                  <Button
+                                                      variant="outline"
+                                                      onClick={markAsComplete}
+                                                  >
+                                                      Complete
+                                                  </Button>
+                                              </div>
+                                          </div>
+                                      );
+                                  })
+                                : ""}
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="completed">
+                        Change your password here.
+                    </TabsContent>
+                </Tabs>
             </div>
         </div>
     );

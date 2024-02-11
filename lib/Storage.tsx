@@ -3,9 +3,10 @@ import { isArray, isObject } from "./utils";
 interface TaskData {
     key: string;
     task: string;
-    status: number;
+    status: number; // 0: Incomplete | 1: Completed
     priority: string;
     deleted: boolean;
+    color: string;
 }
 
 const Storage = {
@@ -87,6 +88,10 @@ const Storage = {
                                   ? data.priority
                                   : updateData.priority,
                           deleted: updateData.deleted,
+                          color:
+                              updateData.color == "__old__"
+                                  ? data.color
+                                  : updateData.color,
                       }
                     : data
             );
@@ -108,6 +113,7 @@ const Storage = {
                           status: data.status,
                           priority: data.priority,
                           deleted: true,
+                          color: data.color,
                       }
                     : data
             );
@@ -118,5 +124,7 @@ const Storage = {
         }
     },
 };
+
+export type { TaskData };
 
 export default Storage;

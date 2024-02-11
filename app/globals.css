@@ -53,6 +53,19 @@
     * {
         @apply border-border;
     }
+
+    *::-webkit-scrollbar {
+        @apply w-[6px];
+    }
+
+    *::-webkit-scrollbar-track {
+        @apply bg-primary-foreground;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        @apply bg-primary rounded-full;
+    }
+
     body {
         @apply bg-background text-foreground;
     }
